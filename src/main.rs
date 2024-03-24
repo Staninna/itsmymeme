@@ -1,46 +1,29 @@
-use dotenvy::var;
-use rocket::{
-    fs::NamedFile, get, launch, request::FromRequest, response::content::RawHtml, routes, Request,
+use axum::{
+    routing::{get, post},
+    Router,
 };
-const DISCORD_USER_AGENT: [&str; 2] = ["Discordbot/2.0", "Intel Mac OS X 11.6"];
+use std::net::SocketAddr;
 
-struct UserAgent<'r>(&'r str);
+mod serve;
+mod upload;
 
-#[rocket::async_trait]
-impl<'r> FromRequest<'r> for UserAgent<'r> {
-    type Error = ();
-
-    async fn from_request(request: &'r Request<'_>) -> rocket::request::Outcome<Self, Self::Error> {
-        let user_agent = request.headers().get_one("User-Agent").unwrap_or("unknown");
-        rocket::request::Outcome::Success(UserAgent(user_agent))
-    }
-}
-
-#[get("/<file..>")]
-async fn serve(file: std::path::PathBuf, user_agent: UserAgent<'_>) -> Result<NamedFile, String> {
-    if DISCORD_USER_AGENT
-        .iter()
-        .any(|ua| user_agent.0.contains(ua))
-    {
-        return match NamedFile::open(file).await {
-            Ok(file) => Ok(file),
-            Err(_) => Err(var("NOT_FOUND_MESSAGE")
-                .unwrap_or("File not found".to_string())
-                .to_string()),
-        };
-    }
-
-    Err(var("ERROR_MESSAGE").unwrap_or("You are not allowed to access this file".to_string()))
-}
-
-#[get("/upload")]
-async fn upload_page() -> RawHtml<&'static str> {
-    RawHtml(include_str!("upload.html"))
-}
-
-#[launch]
-fn rocket() -> _ {
+#[tokio::main]
+async fn main() {
     dotenvy::dotenv().ok();
 
-    rocket::build().mount("/", routes![serve, upload_page])
+    let app = Router::new()
+        .route("/upload", get(upload::upload_page))
+        .route("/upload", post(upload::upload))
+        .route("/:file", get(serve::serve));
+
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let listener = tokio::net::TcpListener::bind(addr)
+        .await
+        .expect("Failed to bind to address");
+
+    println!("Listening on {}", addr);
+
+    axum::serve(listener, app.into_make_service())
+        .await
+        .expect("Failed to start server");
 }
