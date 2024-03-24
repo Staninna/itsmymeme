@@ -15,8 +15,10 @@ pub async fn upload(mut payload: Multipart) -> Result<Html<String>, (StatusCode,
         return Err((StatusCode::UNAUTHORIZED, "Invalid password"));
     }
 
+    // TODO: Support video files
+    // TODO: Support multiple files(?)
     let file = match payload.next_field().await.unwrap() {
-        Some(file) => file.bytes().await.unwrap(),
+        Some(file) => file.bytes().await.unwrap(), // Fails here with some files
         None => return Err((StatusCode::BAD_REQUEST, "File is required")),
     };
 
