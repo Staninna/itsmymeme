@@ -1,0 +1,11 @@
+[package]
+name = "itsmymeme"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dotenvy = "0.15.7"
+rocket = { version = "0.5.0", features = ["json"] }
+rocket-multipart-form-data = "0.10.7"
