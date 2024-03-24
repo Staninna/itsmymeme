@@ -25,10 +25,10 @@ Once installed, launch **itsmymeme** with the following command:
 **itsmymeme** offers flexibility through easy configuration. Customize its behavior by editing the `.env` file:
 
 ```env
-FORBIDDEN="Unauthorized access! Keep your hands off my memes!"   # Customize the forbidden message (optional)
-NOT_FOUND="Oops! This meme seems to have vanished!"              # Customize the not found message (optional)
-PASSWORD="password"                                               # Set a secure password for uploading memes
-CONTENT_DIR="content"                                             # Specify the directory where memes are stored relative to the binary (optional)
+FORBIDDEN="Unauthorized access! Keep your hands off my memes!"        # Customize the forbidden message (optional)
+NOT_FOUND="Oops! This meme seems to have vanished! or never existed!" # Customize the not found message (optional)
+PASSWORD="password"                                                   # Set a secure password for uploading memes
+CONTENT_DIR="content"                                                 # Specify the directory where memes are stored relative to the binary (optional)
 ```
 
 ## API
