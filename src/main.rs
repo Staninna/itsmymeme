@@ -2,7 +2,8 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use std::net::SocketAddr;
+use dotenvy::var;
+use std::net::{IpAddr, SocketAddr};
 
 mod serve;
 mod upload;
@@ -16,7 +17,12 @@ async fn main() {
         .route("/upload", post(upload::upload))
         .route("/:file", get(serve::serve));
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let ip = var("IP").expect("IP not set");
+    let port = var("PORT").expect("PORT not set");
+
+    let ip: IpAddr = ip.parse().unwrap();
+    let port: u16 = port.parse().unwrap();
+    let addr = SocketAddr::from((ip, port));
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("Failed to bind to address");
