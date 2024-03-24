@@ -45,6 +45,10 @@ Securely upload your memes.
 
 View a list of all available memes.
 
+### Note
+
+This route is not implemented yet.
+
 ## License
 
 This project is licensed under the [LICENSE](LICENSE) agreement.
