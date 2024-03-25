@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  itsmymeme:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - FORBIDDEN="Unauthorized access! Keep your hands off my memes!"
+      - NOT_FOUND="Oops! This meme seems to have vanished! or never existed!"
+      - PASSWORD="password"
+      - DOMAIN="http://localhost:8080"
+    volumes:
+      - ./content:/app/content
