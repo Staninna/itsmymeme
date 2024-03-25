@@ -12,5 +12,6 @@ services:
       - DOMAIN=http://localhost:8080
       - IP=0.0.0.0
       - PORT=8080
+      - CONTENT_DIR=/app/content
     volumes:
       - ./content:/app/content
