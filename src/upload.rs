@@ -44,7 +44,8 @@ pub async fn upload(mut payload: Multipart) -> Result<Html<String>, (StatusCode,
     .await
     .unwrap();
 
-    let url = format!("http://localhost:3000/{}.{}", uuid, ext.extension());
+    let domain = var("DOMAIN").unwrap();
+    let url = format!("{}/{}.{}", domain, uuid, ext.extension());
 
     Ok(Html(format!(
         r#"<html>
