@@ -32,6 +32,7 @@ CONTENT_DIR="content"                                                 # Specify 
 
 IP="0.0.0.0"                                                          # Set the IP address to listen on
 PORT="8080"                                                           # Set the port to listen on
+DOMAIN="http://localhost:8080"                                        # Set the domain to use in the links
 ```
 
 ## API
@@ -55,3 +56,7 @@ This route is not implemented yet.
 ## License
 
 This project is licensed under the [LICENSE](LICENSE) agreement.
+
+### Credits
+
+This project was inspired by [this](https://github.com/Axodouble/ShareX-Memesteal-Preventer-Uploader) repository. Big thanks to the author for the idea!
