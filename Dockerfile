@@ -3,23 +3,20 @@ FROM rust:latest as builder
 RUN USER=root cargo new --bin itsmymeme
 WORKDIR /itsmymeme
 
-COPY ./Cargo.toml ./Cargo.lock ./
-RUN cargo build --release
-RUN rm src/*.rs
-
-COPY ./src ./src
+COPY . .
 
 RUN cargo build --release
 
-FROM debian:buster-slim
+FROM ubuntu:latest
+
+RUN apt-get update && rm -rf /var/lib/apt/lists/*
 
 ENV RUST_LOG=info
-ENV PORT=8080
 
 WORKDIR /usr/local/bin
 
 COPY --from=builder /itsmymeme/target/release/itsmymeme ./
 
-EXPOSE $PORT
+EXPOSE 8080
 
 CMD ["./itsmymeme"]
