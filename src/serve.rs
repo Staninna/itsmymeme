@@ -23,8 +23,12 @@ pub async fn serve(Path(path): Path<String>, headers: HeaderMap) -> impl IntoRes
             log::info!("Serving file to Discord user agent");
             serve_file(path).await.into_response()
         }
+        Some(_) => {
+            log::info!("Forbidden request from user agent: {:?}", user_agent);
+            forbidden().into_response()
+        }
         _ => {
-            log::info!("Forbidden request");
+            log::info!("Forbidden request without user agent");
             forbidden().into_response()
         }
     }
