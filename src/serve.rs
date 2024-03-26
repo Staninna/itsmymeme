@@ -5,7 +5,6 @@ use axum::{
 };
 use dotenvy::var;
 
-#[cfg(not(debug_assertions))]
 const DISCORD_USER_AGENT: [&str; 2] = ["Discordbot/2.0", "Intel Mac OS X 11.6"];
 
 pub async fn serve(Path(path): Path<String>, headers: HeaderMap) -> impl IntoResponse {
@@ -20,10 +19,7 @@ pub async fn serve(Path(path): Path<String>, headers: HeaderMap) -> impl IntoRes
     );
 
     match user_agent {
-        #[cfg(debug_assertions)]
-        Some(_) => serve_file(path).await.into_response(),
-        #[cfg(not(debug_assertions))]
-        Some(user_agent) if DISCORD_USER_AGENT.contains(&user_agent.to_str().unwrap()) => {
+        Some(user_agent) if DISCORD_USER_AGENT.contains(&user_agent.as_str()) => {
             serve_file(path).await.into_response()
         }
         _ => forbidden().into_response(),
