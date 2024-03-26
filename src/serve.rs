@@ -9,7 +9,17 @@ use dotenvy::var;
 const DISCORD_USER_AGENT: [&str; 2] = ["Discordbot/2.0", "Intel Mac OS X 11.6"];
 
 pub async fn serve(Path(path): Path<String>, headers: HeaderMap) -> impl IntoResponse {
-    match headers.get("User-Agent") {
+    let user_agent = headers
+        .get("User-Agent")
+        .map(|value| value.to_str().unwrap().to_string());
+
+    log::info!(
+        "Got request for file: {} with user agent: {:?}",
+        path,
+        user_agent
+    );
+
+    match user_agent {
         #[cfg(debug_assertions)]
         Some(_) => serve_file(path).await.into_response(),
         #[cfg(not(debug_assertions))]

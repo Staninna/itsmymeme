@@ -11,6 +11,7 @@ mod upload;
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
+    env_logger::init();
 
     let app = Router::new()
         .route("/upload", get(upload::upload_page))
@@ -27,7 +28,7 @@ async fn main() {
         .await
         .expect("Failed to bind to address");
 
-    println!("Listening on {}", addr);
+    log::info!("Listening on {}", addr);
 
     axum::serve(listener, app.into_make_service())
         .await
