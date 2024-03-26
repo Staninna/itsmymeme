@@ -1,4 +1,5 @@
 use axum::{
+    extract::DefaultBodyLimit,
     routing::{get, post},
     Router,
 };
@@ -16,6 +17,7 @@ async fn main() {
     let app = Router::new()
         .route("/upload", get(upload::upload_page))
         .route("/upload", post(upload::upload))
+        .layer(DefaultBodyLimit::max(1024 * 1024 * 1024))
         .route("/:file", get(serve::serve));
 
     let ip = var("IP").expect("IP not set");
