@@ -47,7 +47,12 @@ async fn serve_file(path: String) -> impl IntoResponse {
                 .map(|ext| format!("{}", ext))
                 .unwrap_or_else(|| "application/octet-stream".to_string());
 
-            let headers = [(header::CONTENT_TYPE, content_type)];
+            let content_length = file.len();
+
+            let headers = [
+                (header::CONTENT_TYPE, content_type),
+                (header::CONTENT_LENGTH, content_length.to_string()),
+            ];
 
             Ok((StatusCode::OK, headers, file))
         }
